@@ -1,0 +1,5 @@
+# Dependencias para el Sistema de Control de Temperatura
+# Python 3.8+
+
+# No se requieren dependencias externas
+# El sistema usa solo la biblioteca estándar de Python

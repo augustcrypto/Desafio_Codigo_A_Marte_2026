@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hábitat Marciano - Proyecto Completo</title>
+    <meta name="description" content="Sistema integrado de soporte vital para colonización marciana. Implementado en Rust, C++ y Python.">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1a2e 50%, #16213e 100%);
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom: 3px solid #667eea;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .header h1 {
+            font-size: 3em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.3em;
+            color: #a0aec0;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            margin-bottom: 40px;
+            border: 2px solid rgba(102, 126, 234, 0.3);
+        }
+
+        .hero h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #ffd700;
+        }
+
+        .hero p {
+            font-size: 1.3em;
+            color: #cbd5e0;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto 30px;
+        }
+
+        /* Quick Links */
+        .quick-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .link-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .link-card:hover {
+            transform: translateY(-10px);
+            border-color: #667eea;
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+        }
+
+        .link-card-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        .link-card-title {
+            font-size: 1.8em;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .link-card-desc {
+            font-size: 1.1em;
+            color: #a0aec0;
+            line-height: 1.6;
+        }
+
+        .link-card-badge {
+            display: inline-block;
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid #10b981;
+            border-radius: 15px;
+            padding: 5px 15px;
+            font-size: 0.9em;
+            color: #10b981;
+            margin-top: 15px;
+        }
+
+        /* Section */
+        .section {
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: 2.5em;
+            color: #ffd700;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: rgba(102, 126, 234, 0.1);
+            border: 2px solid #667eea;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3em;
+            color: #ffd700;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 1.1em;
+            color: #a0aec0;
+        }
+
+        /* Systems Grid */
+        .systems-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .system-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .system-card:hover {
+            transform: translateY(-5px);
+            border-color: #667eea;
+        }
+
+        .system-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .system-title {
+            font-size: 1.5em;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .system-desc {
+            color: #a0aec0;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .system-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .system-link {
+            padding: 8px 15px;
+            background: rgba(102, 126, 234, 0.2);
+            border: 1px solid #667eea;
+            border-radius: 8px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .system-link:hover {
+            background: #667eea;
+        }
+
+        /* Share Section */
+        .share-section {
+            background: rgba(255, 215, 0, 0.1);
+            border: 2px solid #ffd700;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .share-title {
+            font-size: 2em;
+            color: #ffd700;
+            margin-bottom: 20px;
+        }
+
+        .share-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .share-btn {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .share-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .url-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px auto;
+            max-width: 800px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            word-break: break-all;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border-top: 2px solid #667eea;
+            margin-top: 60px;
+        }
+
+        .footer p {
+            color: #a0aec0;
+            margin: 10px 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .hero h2 {
+                font-size: 1.8em;
+            }
+            
+            .quick-links {
+                grid-template-columns: 1fr;
+            }
+            
+            .systems-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Copy button */
+        .copy-btn {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid #10b981;
+            color: #10b981;
+            padding: 8px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-left: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: #10b981;
+            color: #fff;
+        }
+
+        .copy-btn.copied {
+            background: #10b981;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🚀 EL CÓDIGO MARTE</h1>
+        <p>Hábitat Autónomo y Regenerativo para Misiones Prolongadas</p>
+        <p style="font-size: 1.1em; color: #ffd700; margin-top: 10px;">
+            <strong>Hackathon Argentina Espacial 2026</strong>
+        </p>
+        <p style="font-size: 0.95em; margin-top: 5px;">
+            Arcadia Planitia, Marte | Coordenadas: 47.6° N, 184.0° E
+        </p>
+    </div>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero">
+            <h2>🌟 Hackathon Argentina Espacial 2026 - Desafío del Hábitat</h2>
+            <p>
+                <strong>El Código Marte</strong> es el primer ecosistema autónomo extraterrestre de origen argentino.
+                Sistema integrado de soporte vital diseñado para garantizar la supervivencia de <strong>4-6 astronautas</strong>
+                durante <strong>18-36 meses</strong> en Arcadia Planitia, donde el hielo subsuperficial está confirmado a solo 1-3 metros de profundidad.
+            </p>
+            <p style="margin-top: 20px;">
+                Implementado en <strong>Rust, C++ y Python</strong> con tecnologías argentinas de vanguardia:
+                <strong>INVAP + UNLP </strong> (reactores nucleares), <strong>CONAE + UNLP </strong> (comunicaciones espaciales),
+                <strong>CONICET</strong> (biotecnología), <strong>INTA</strong> (agricultura extrema).
+            </p>
+            <div class="stats-grid" style="max-width: 1000px; margin: 40px auto 0;">
+                <div class="stat-card">
+                    <div class="stat-number">4-6</div>
+                    <div class="stat-label">Astronautas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">18-36</div>
+                    <div class="stat-label">Meses de Misión</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">8</div>
+                    <div class="stat-label">Sistemas Críticos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">-60°C</div>
+                    <div class="stat-label">Temp. Media Marte</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">600 Pa</div>
+                    <div class="stat-label">Presión Exterior</div>
+                </div>
+            </div>
+            
+            <!-- Image placeholder -->
+            <div style="margin-top: 30px;">
+                <img src="Gemini_Generated_Image_g4xj8g4xj8g4xj8g.png" alt="Hábitat Marciano"
+                     style="max-width: 100%; height: auto; border-radius: 15px; border: 2px solid #667eea;">
+            </div>
+        </div>
+
+        <!-- Quick Access Links -->
+        <div class="section">
+            <h2 class="section-title">🎯 Acceso Rápido</h2>
+            <div class="quick-links">
+                <a href="presentaciones/00-presentacion-general.html" class="link-card" target="_blank">
+                    <div class="link-card-icon">📊</div>
+                    <div class="link-card-title">Presentación General</div>
+                    <div class="link-card-desc">
+                        Presentación estilo PowerPoint con 12 slides interactivos.
+                        Navegación con teclado y pantalla completa.
+                    </div>
+                    <span class="link-card-badge">✓ HTML5 Interactivo</span>
+                </a>
+
+                <a href="presentaciones/index.html" class="link-card" target="_blank">
+                    <div class="link-card-icon">🎮</div>
+                    <div class="link-card-title">Portal de Demos</div>
+                    <div class="link-card-desc">
+                        Acceso a las 6 demos HTML5 interactivas de cada sistema.
+                        Simulaciones en tiempo real.
+                    </div>
+                    <span class="link-card-badge">✓ 6 Demos Disponibles</span>
+                </a>
+
+                <a href="README.md" class="link-card" target="_blank">
+                    <div class="link-card-icon">📖</div>
+                    <div class="link-card-title">Documentación</div>
+                    <div class="link-card-desc">
+                        README principal con arquitectura completa, instrucciones
+                        de compilación y uso de todos los sistemas.
+                    </div>
+                    <span class="link-card-badge">✓ Documentación Completa</span>
+                </a>
+
+                <a href="presentaciones/PRESENTACION_GENERAL.md" class="link-card" target="_blank">
+                    <div class="link-card-icon">📝</div>
+                    <div class="link-card-title">Presentación Markdown</div>
+                    <div class="link-card-desc">
+                        Documento detallado con toda la información del proyecto
+                        en formato Markdown (520 líneas).
+                    </div>
+                    <span class="link-card-badge">✓ Formato Texto</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Share Section -->
+        <div class="share-section">
+            <h2 class="share-title">🔗 Compartir Proyecto</h2>
+            <p style="font-size: 1.2em; color: #cbd5e0; margin-bottom: 20px;">
+                Usa estos enlaces para compartir el proyecto completo:
+            </p>
+            
+            <div style="margin: 30px 0;">
+                <h3 style="color: #ffd700; margin-bottom: 15px;">📍 URL Local (Live Server)</h3>
+                <div class="url-box" id="localUrl">
+                    http://localhost:5500/index.html
+                    <button class="copy-btn" onclick="copyToClipboard('localUrl')">📋 Copiar</button>
+                </div>
+                <p style="color: #a0aec0; font-size: 0.9em;">
+                    Ejecuta con Live Server en VS Code o cualquier servidor HTTP local
+                </p>
+            </div>
+
+            <div style="margin: 30px 0;">
+                <h3 style="color: #ffd700; margin-bottom: 15px;">🌐 Para Hosting Web</h3>
+                <div class="url-box">
+                    Sube la carpeta completa a:<br>
+                    • GitHub Pages<br>
+                    • Netlify<br>
+                    • Vercel<br>
+                    • Cualquier hosting estático
+                </div>
+            </div>
+
+            <div class="share-links">
+                <a href="https://github.com" class="share-btn" target="_blank">
+                    📦 Subir a GitHub
+                </a>
+                <a href="https://app.netlify.com/drop" class="share-btn" target="_blank">
+                    🚀 Deploy en Netlify
+                </a>
+                <a href="https://vercel.com/new" class="share-btn" target="_blank">
+                    ▲ Deploy en Vercel
+                </a>
+            </div>
+        </div>
+
+        <!-- Systems Overview -->
+        <div class="section">
+            <h2 class="section-title">🛠️ Sistemas Implementados</h2>
+            <div class="systems-grid">
+                <div class="system-card">
+                    <div class="system-icon">🌡️</div>
+                    <div class="system-title">Control de Temperatura</div>
+                    <div class="system-desc">
+                        Gestión térmica para ciclo marciano de ±60°C diarios. Reactor nuclear micro-SMR (INVAP) como fuente principal de calor.
+                        Paneles de aerogel de sílice, heat pipes de amoníaco y control PID con redundancia triple.
+                    </div>
+                    <div class="system-links">
+                        <a href="presentaciones/01-temperatura-habitat.html" class="system-link" target="_blank">Demo HTML5</a>
+                        <a href="01-temperatura-habitat/README.md" class="system-link" target="_blank">Docs</a>
+                        <a href="01-temperatura-habitat/rust/src/main.rs" class="system-link" target="_blank">Código Rust</a>
+                    </div>
+                </div>
+
+                <div class="system-card">
+                    <div class="system-icon">🛡️</div>
+                    <div class="system-title">Protección contra Radiación y Bit Flips</div>
+                    <div class="system-desc">
+                        4 capas de protección: regolito compactado (50-80cm), polietileno (15cm), superbobinas superconductoras (campo magnético 5-10mT),
+                        y ubicación subterránea (1.5m). TMR + ECC + Hamming Code contra SEU. Reducción >90% de radiación GCR.
+                    </div>
+                    <div class="system-links">
+                        <a href="presentaciones/02-proteccion-bitflips.html" class="system-link" target="_blank">Demo HTML5</a>
+                        <a href="02-proteccion-bitflips/README.md" class="system-link" target="_blank">Docs</a>
+                        <a href="02-proteccion-bitflips/rust/src/main.rs" class="system-link" target="_blank">Código Rust</a>
+                    </div>
+                </div>
+
+                <div class="system-card">
+                    <div class="system-icon">💨</div>
+                    <div class="system-title">Control de Oxígeno y Atmósfera</div>
+                    <div class="system-desc">
+                        Mezcla 21% O₂ / 79% N₂ a 70 kPa. Sistema Sabatier (CO₂ + H₂ → CH₄ + H₂O).
+                        2 sistemas MOXIE independientes + cartuchos LiOH de emergencia (72h). Zeolitas regenerativas y aminas líquidas (CONICET).
+                    </div>
+                    <div class="system-links">
+                        <a href="presentaciones/05-control-o2.html" class="system-link" target="_blank">Demo HTML5</a>
+                        <a href="README.md#sistema-5" class="system-link" target="_blank">Docs</a>
+                    </div>
+                </div>
+
+                <div class="system-card">
+                    <div class="system-icon">🔄</div>
+                    <div class="system-title">Conversión CO₂ → O₂ (MOXIE-2)</div>
+                    <div class="system-desc">
+                        Electrólisis de óxido sólido a 800°C. Produce 25g/h de O₂ por unidad desde atmósfera marciana (95% CO₂, 600 Pa).
+                        Tecnología INVAP de reactores de alta temperatura. Redundancia N+2.
+                    </div>
+                    <div class="system-links">
+                        <a href="presentaciones/06-conversion-co2-o2.html" class="system-link" target="_blank">Demo HTML5</a>
+                        <a href="README.md#sistema-6" class="system-link" target="_blank">Docs</a>
+                    </div>
+                </div>
+
+                <div class="system-card">
+                    <div class="system-icon">💧</div>
+                    <div class="system-title">Ciclo del Agua</div>
+                    <div class="system-desc">
+                        Recuperación >98% del agua. Extracción de hielo local (Arcadia Planitia, 1-3m profundidad) con meltsondes térmicas: 5-10 L/día.
+                        Biorreactor MBR + ultrafiltración + UV. Procesado de percloratos por electrólisis. Purificación EDL (electrodinámica de plasma).
+                    </div>
+                    <div class="system-links">
+                        <a href="presentaciones/07-filtracion-agua.html" class="system-link" target="_blank">Demo HTML5</a>
+                        <a href="README.md#sistema-7" class="system-link" target="_blank">Docs</a>
+                    </div>
+                </div>
+
+                <div class="system-card">
+                    <div class="system-icon">🔋</div>
+                    <div class="system-title">Sistema Energético Dual</div>
+                    <div class="system-desc">
+                        <strong>Solar:</strong> 80 kWe pico (500m², bifaciales con limpieza electrodinámica).
+                        <strong>Nuclear:</strong> Reactor micro-SMR INVAP 40 kWe continuo (10+ años sin recarga).
+                        Baterías Li-S (48h reserva) + pila H₂/O₂ emergencia (72h). Opera 100% nuclear durante tormentas de polvo globales.
+                    </div>
+                    <div class="system-links">
+                        <a href="presentaciones/08-sistema-energia-recursos.html" class="system-link" target="_blank">Demo HTML5</a>
+                        <a href="README.md#sistema-8" class="system-link" target="_blank">Docs</a>
+                    </div>
+                </div>
+
+                <div class="system-card">
+                    <div class="system-icon">📡</div>
+                    <div class="system-title">Comunicaciones Cuánticas Híbridas RF/Óptico</div>
+                    <div class="system-desc">
+                        <strong>Sistema innovador argentino (INVAP + CONAE):</strong> Enlace cuántico a través de láser óptico con
+                        Distribución de Clave Cuántica (QKD). Incluye posible satélite argentino con tecnología cuántica de comunicaciones
+                        y cifrado de clave post-cuántica de <strong>IBM</strong> para máxima velocidad y seguridad.
+                        Conmutación automática a RF durante tormentas de polvo. Latencia 4-24 minutos.
+                    </div>
+                    <div class="system-links">
+                        <a href="README.md#sistema-3" class="system-link" target="_blank">Docs</a>
+                    </div>
+                </div>
+
+                <div class="system-card">
+                    <div class="system-icon">📊</div>
+                    <div class="system-title">Sistema de Telemetría</div>
+                    <div class="system-desc">
+                        Monitoreo en tiempo real de 100+ sensores (temperatura, presión, flujo, radiación).
+                        Compresión 10:1, almacenamiento redundante. Sensores INTI de precisión industrial.
+                    </div>
+                    <div class="system-links">
+                        <a href="README.md#sistema-4" class="system-link" target="_blank">Docs</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quantum Communications Section -->
+        <div class="section">
+            <h2 class="section-title">🔐 Sistema de Comunicaciones Cuánticas</h2>
+            <div class="system-card" style="max-width: 1000px; margin: 0 auto;">
+                <h3 style="color: #667eea; margin-bottom: 20px; font-size: 1.8em;">
+                    Enlace Cuántico Óptico + Satélite Argentino
+                </h3>
+                
+                <div style="background: rgba(102, 126, 234, 0.1); padding: 25px; border-radius: 10px; margin-bottom: 25px;">
+                    <h4 style="color: #ffd700; margin-bottom: 15px;">🛰️ Infraestructura Argentina</h4>
+                    <ul style="color: #cbd5e0; line-height: 2; margin-left: 20px;">
+                        <li><strong>INVAP + CONAE:</strong> Satélites repetidores en órbita marciana (experiencia SABIA-Mar, SARE)</li>
+                        <li><strong>Red de Espacio Profundo:</strong> Estación CLTC en Neuquén + Radiotelescopio LLAMA</li>
+                        <li><strong>Satélite Cuántico Argentino:</strong> Tecnología cuántica de comunicaciones con cifrado post-cuántico</li>
+                        <li><strong>Colaboración IBM:</strong> Cifrado de clave post-cuántica para seguridad contra computadoras cuánticas futuras</li>
+                    </ul>
+                </div>
+
+                <div style="background: rgba(255, 215, 0, 0.1); padding: 25px; border-radius: 10px; margin-bottom: 25px;">
+                    <h4 style="color: #ffd700; margin-bottom: 15px;">⚡ Sistema Híbrido RF/Óptico</h4>
+                    <ul style="color: #cbd5e0; line-height: 2; margin-left: 20px;">
+                        <li><strong>Antena Dual:</strong> Parabólica de fibra de carbono pulida que actúa como reflector de radio Y espejo óptico para láser</li>
+                        <li><strong>Días Despejados:</strong> Transmisión láser a velocidades de gigabits por segundo con QKD (Distribución de Clave Cuántica)</li>
+                        <li><strong>Tormentas de Polvo:</strong> Conmutación automática a radio (banda Ka/X) que atraviesa el polvo sin atenuación</li>
+                        <li><strong>Retransmisión Satélite-Satélite:</strong> Cross-link láser entre satélites en zonas despejadas</li>
+                        <li><strong>Seguridad Cuántica:</strong> Cifrado imposible de interceptar sin detección, preparado para era post-cuántica</li>
+                    </ul>
+                </div>
+
+                <div style="background: rgba(16, 185, 129, 0.1); padding: 25px; border-radius: 10px;">
+                    <h4 style="color: #10b981; margin-bottom: 15px;">🔬 Tecnología de Vanguardia</h4>
+                    <p style="color: #cbd5e0; line-height: 1.8; margin-bottom: 15px;">
+                        El sistema de comunicaciones cuánticas representa la colaboración entre Argentina e IBM para crear
+                        la infraestructura de comunicaciones espaciales más segura y rápida jamás diseñada. La tecnología
+                        de cifrado post-cuántico garantiza que las comunicaciones permanezcan seguras incluso ante el
+                        desarrollo futuro de computadoras cuánticas capaces de romper el cifrado tradicional.
+                    </p>
+                    <p style="color: #cbd5e0; line-height: 1.8;">
+                        <strong>Ventajas clave:</strong> Velocidad de gigabits/segundo en condiciones óptimas, seguridad
+                        cuántica inviolable, redundancia automática ante condiciones adversas, y capacidad de expansión
+                        para futuras misiones a Marte y más allá.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tech Stack -->
+        <div class="section">
+            <h2 class="section-title">💻 Stack Tecnológico</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">🦀</div>
+                    <div class="stat-label">Rust<br><small>Seguridad y rendimiento</small></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">⚙️</div>
+                    <div class="stat-label">C++<br><small>Control de hardware</small></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">🐍</div>
+                    <div class="stat-label">Python<br><small>Prototipado rápido</small></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">🌐</div>
+                    <div class="stat-label">HTML5/CSS3/JS<br><small>Demos interactivas</small></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Instructions -->
+        <div class="section">
+            <h2 class="section-title">🚀 Cómo Usar</h2>
+            <div class="system-card" style="max-width: 800px; margin: 0 auto;">
+                <h3 style="color: #667eea; margin-bottom: 20px;">Opción 1: Live Server (Recomendado)</h3>
+                <ol style="color: #cbd5e0; line-height: 2; margin-left: 20px;">
+                    <li>Abre el proyecto en VS Code</li>
+                    <li>Instala la extensión "Live Server"</li>
+                    <li>Click derecho en <code>index.html</code> → "Open with Live Server"</li>
+                    <li>Navega por las presentaciones y demos</li>
+                </ol>
+
+                <h3 style="color: #667eea; margin: 30px 0 20px;">Opción 2: Servidor Python</h3>
+                <div class="url-box" style="text-align: left;">
+                    python server.py<br>
+                    # Se abre automáticamente en http://localhost:8000
+                </div>
+
+                <h3 style="color: #667eea; margin: 30px 0 20px;">Opción 3: Abrir Archivos Directamente</h3>
+                <p style="color: #cbd5e0; line-height: 1.8;">
+                    Simplemente abre cualquier archivo <code>.html</code> en tu navegador.
+                    Todas las demos funcionan sin servidor.
+                </p>
+            </div>
+        </div>
+    </div>
+
+        <!-- Habitat Architecture Section -->
+        <div class="section">
+            <h2 class="section-title">🏗️ Arquitectura del Hábitat</h2>
+            <div class="system-card" style="max-width: 1000px; margin: 0 auto;">
+                <h3 style="color: #667eea; margin-bottom: 20px; font-size: 1.8em;">
+                    Configuración Modular Subterránea - Arcadia Planitia
+                </h3>
+                
+                <div style="background: rgba(102, 126, 234, 0.1); padding: 25px; border-radius: 10px; margin-bottom: 25px;">
+                    <h4 style="color: #ffd700; margin-bottom: 15px;">📐 Módulos del Hábitat</h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                        <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px;">
+                            <strong style="color: #667eea;">Central (MC)</strong><br>
+                            <span style="color: #cbd5e0;">120 m² - Laboratorio, comunicaciones y control de misión</span>
+                        </div>
+                        <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px;">
+                            <strong style="color: #667eea;">Habitacional (MH)</strong><br>
+                            <span style="color: #cbd5e0;">80 m² / 2 tripulantes - Dormitorios, zona de bienestar</span>
+                        </div>
+                        <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px;">
+                            <strong style="color: #667eea;">Biosoporte (MB)</strong><br>
+                            <span style="color: #cbd5e0;">100 m² - Invernadero, reciclaje de aire y agua</span>
+                        </div>
+                        <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px;">
+                            <strong style="color: #667eea;">Potencia (MP)</strong><br>
+                            <span style="color: #cbd5e0;">40 m² - Gestión energética, baterías, reactor</span>
+                        </div>
+                        <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px;">
+                            <strong style="color: #667eea;">EVA / Airlock (ME)</strong><br>
+                            <span style="color: #cbd5e0;">30 m² - Transición interior-exterior, almacén de trajes</span>
+                        </div>
+                        <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px;">
+                            <strong style="color: #667eea;">Mantenimiento Robótico (MR)</strong><br>
+                            <span style="color: #cbd5e0;">25 m² - Hangar de robots, fabricación 3D</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: rgba(255, 215, 0, 0.1); padding: 25px; border-radius: 10px; margin-bottom: 25px;">
+                    <h4 style="color: #ffd700; margin-bottom: 15px;">🌱 Huerta Marciana - Producción de Alimentos</h4>
+                    <p style="color: #cbd5e0; line-height: 1.8; margin-bottom: 15px;">
+                        El módulo de biosoporte provee el <strong>35-50% del aporte calórico</strong> de la tripulación mediante
+                        cultivos en ambiente controlado (CEA). Tecnología INTA de agricultura de precisión en ambientes extremos.
+                    </p>
+                    <ul style="color: #cbd5e0; line-height: 2; margin-left: 20px;">
+                        <li><strong>Lechuga NASA Veggie:</strong> 3.5-5.0 kg/m²/mes (28-35 días) - Vitaminas A, C, K</li>
+                        <li><strong>Papa/Batata adaptada:</strong> 4.0-6.0 kg/m²/mes (90-110 días) - Calorías, K, B6</li>
+                        <li><strong>Soja nano:</strong> 1.5-2.5 kg/m²/mes (80-90 días) - Proteína completa</li>
+                        <li><strong>Microalgas Spirulina:</strong> 0.5-1.0 kg/m²/mes (continuo) - Proteína 60%, B12</li>
+                        <li><strong>Sistemas:</strong> Hidroponía (50% más rápido), Aeroponía (95% menos agua), Regolito modificado</li>
+                    </ul>
+                </div>
+
+                <div style="background: rgba(16, 185, 129, 0.1); padding: 25px; border-radius: 10px;">
+                    <h4 style="color: #10b981; margin-bottom: 15px;">🤖 Robótica Argentina</h4>
+                    <ul style="color: #cbd5e0; line-height: 2; margin-left: 20px;">
+                        <li><strong>HERMES-1/2:</strong> Brazos robóticos 6-DOF (INVAP/CONAE) - Instalación, reparación, sellado</li>
+                        <li><strong>GUARANI-1/2/3:</strong> Rovers autónomos (CONICET/Novabot) - Inspección, extracción de hielo</li>
+                        <li><strong>CHASQUI-1:</strong> Dron atmosférico (INVAP/FuABio) - Reconocimiento aéreo, detección de fisuras</li>
+                        <li><strong>ATLAS:</strong> Robot humanoide (UTN/ITBA) - Mantenimiento, asistencia médica</li>
+                        <li><strong>Impresión 3D:</strong> Sinterizado láser de regolito para bloques estructurales y piezas de repuesto</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Argentine Contributions Section -->
+        <div class="section">
+            <h2 class="section-title">🇦🇷 Contribución Argentina al Código Marte</h2>
+            <div class="systems-grid">
+                <div class="system-card" style="background: rgba(102, 126, 234, 0.15);">
+                    <div class="system-icon">⚛️</div>
+                    <div class="system-title">INVAP - Energía Nuclear</div>
+                    <div class="system-desc">
+                        Reactor micro-SMR de 40 kWe (10+ años sin recarga). Experiencia: RA-6, RA-8, RA-10 (30 MW en construcción).
+                        Exportaciones a 7 países. Ciclo completo de combustible nuclear.
+                    </div>
+                </div>
+
+                <div class="system-card" style="background: rgba(102, 126, 234, 0.15);">
+                    <div class="system-icon">🛰️</div>
+                    <div class="system-title">CONAE - Comunicaciones Espaciales</div>
+                    <div class="system-desc">
+                        Satélites repetidores en órbita marciana (SABIA-Mar, SARE). Estación CLTC Neuquén + LLAMA.
+                        Red de Espacio Profundo del hemisferio sur.
+                    </div>
+                </div>
+
+                <div class="system-card" style="background: rgba(102, 126, 234, 0.15);">
+                    <div class="system-icon">🧬</div>
+                    <div class="system-title">CONICET - Biotecnología</div>
+                    <div class="system-desc">
+                        Materiales porosos funcionales (zeolitas), biorreactores de microalgas, técnicas CRISPR para cultivos
+                        resistentes al estrés. Robótica avanzada.
+                    </div>
+                </div>
+
+                <div class="system-card" style="background: rgba(102, 126, 234, 0.15);">
+                    <div class="system-icon">🌾</div>
+                    <div class="system-title">INTA - Agricultura Extrema</div>
+                    <div class="system-desc">
+                        65 años de experiencia en agricultura en ambientes extremos (Patagonia, Puna, ambientes salinos).
+                        Agricultura de precisión y cultivos en condiciones adversas.
+                    </div>
+                </div>
+
+                <div class="system-card" style="background: rgba(102, 126, 234, 0.15);">
+                    <div class="system-icon">🔬</div>
+                    <div class="system-title">INTI - Sensores de Precisión</div>
+                    <div class="system-desc">
+                        Sensores de estado sólido para detección de gases (CO, NH₃, VOCs). Instrumentación industrial de alta precisión.
+                    </div>
+                </div>
+
+                <div class="system-card" style="background: rgba(102, 126, 234, 0.15);">
+                    <div class="system-icon">❄️</div>
+                    <div class="system-title">IAA - Experiencia Antártica</div>
+                    <div class="system-desc">
+                        Bases Belgrano II y Carlini: operación en aislamiento extremo (-40°C, 8-14 meses). Protocolos de sistemas cerrados
+                        y telemedicina aplicables directamente al hábitat marciano.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p style="font-size: 1.3em; margin-bottom: 15px;">🚀 EL CÓDIGO MARTE - Hackathon Argentina Espacial 2026</p>
+        <p>Hábitat Autónomo y Regenerativo | Arcadia Planitia, Marte (47.6° N, 184.0° E)</p>
+        <p style="margin-top: 10px;">Implementado en Rust, C++ y Python | Versión 1.0.0</p>
+        <p style="margin-top: 20px; font-size: 1.1em; color: #ffd700;">
+            <strong>"Argentina tiene todo lo que Marte necesita"</strong>
+        </p>
+        <p style="margin-top: 10px; font-size: 1em; color: #a0aec0;">
+            "Per aspera ad astra" - A través de las dificultades, hacia las estrellas
+        </p>
+    </div>
+
+    <script>
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.textContent.split('📋')[0].trim();
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = element.querySelector('.copy-btn');
+                const originalText = btn.textContent;
+                btn.textContent = '✓ Copiado!';
+                btn.classList.add('copied');
+                
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // Update local URL based on current location
+        window.addEventListener('load', () => {
+            const localUrlElement = document.getElementById('localUrl');
+            if (window.location.href !== 'about:blank') {
+                const currentUrl = window.location.href;
+                localUrlElement.innerHTML = currentUrl + 
+                    '<button class="copy-btn" onclick="copyToClipboard(\'localUrl\')">📋 Copiar</button>';
+            }
+        });
+    </script>
+</body>
+</html>

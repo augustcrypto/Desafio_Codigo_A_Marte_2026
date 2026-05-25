@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentaciones - Hábitat Marciano</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1a2e 50%, #16213e 100%);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: fadeInDown 1s ease;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-size: 3.5em;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            color: #a0aec0;
+            margin-bottom: 10px;
+        }
+
+        .mission-badge {
+            display: inline-block;
+            background: rgba(102, 126, 234, 0.2);
+            border: 2px solid #667eea;
+            border-radius: 25px;
+            padding: 10px 25px;
+            margin-top: 15px;
+            font-size: 0.9em;
+            color: #667eea;
+        }
+
+        .presentations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .presentation-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.8s ease;
+            animation-fill-mode: both;
+        }
+
+        .presentation-card:nth-child(1) { animation-delay: 0.1s; }
+        .presentation-card:nth-child(2) { animation-delay: 0.2s; }
+        .presentation-card:nth-child(3) { animation-delay: 0.3s; }
+        .presentation-card:nth-child(4) { animation-delay: 0.4s; }
+        .presentation-card:nth-child(5) { animation-delay: 0.5s; }
+        .presentation-card:nth-child(6) { animation-delay: 0.6s; }
+        .presentation-card:nth-child(7) { animation-delay: 0.7s; }
+        .presentation-card:nth-child(8) { animation-delay: 0.8s; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .presentation-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .presentation-card:hover::before {
+            left: 100%;
+        }
+
+        .presentation-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
+        }
+
+        .card-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .card-title {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            color: #667eea;
+        }
+
+        .card-description {
+            color: #a0aec0;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .card-status {
+            display: inline-block;
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid #10b981;
+            border-radius: 15px;
+            padding: 5px 15px;
+            font-size: 0.85em;
+            color: #10b981;
+            margin-top: 10px;
+        }
+
+        .card-status.coming-soon {
+            background: rgba(251, 191, 36, 0.2);
+            border-color: #fbbf24;
+            color: #fbbf24;
+        }
+
+        .general-presentation {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border: 3px solid #667eea;
+        }
+
+        .general-presentation .card-title {
+            font-size: 2em;
+            color: #fff;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 50px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #a0aec0;
+            font-size: 0.9em;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: #a0aec0;
+            font-size: 0.9em;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5em;
+            }
+            
+            .presentations-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .general-presentation {
+                grid-column: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 HÁBITAT MARCIANO</h1>
+            <p class="subtitle">Sistemas Críticos de Soporte Vital</p>
+            <span class="mission-badge">MISIÓN: COLONIZACIÓN | ESTADO: OPERACIONAL</span>
+        </header>
+
+        <div class="presentations-grid">
+            <!-- Presentación General HTML5 -->
+            <a href="00-presentacion-general.html" target="_blank">
+                <div class="presentation-card general-presentation">
+                    <span class="card-icon">📊</span>
+                    <h2 class="card-title">Presentación General Interactiva</h2>
+                    <p class="card-description">
+                        Presentación estilo PowerPoint con 12 slides. Navegación con teclado (←→),
+                        pantalla completa, y animaciones. Visión completa del proyecto.
+                    </p>
+                    <span class="card-status">✓ Interactivo (HTML5)</span>
+                </div>
+            </a>
+
+            <!-- Presentación General Markdown -->
+            <a href="PRESENTACION_GENERAL.md" target="_blank">
+                <div class="presentation-card">
+                    <span class="card-icon">📝</span>
+                    <h2 class="card-title">Documentación Completa</h2>
+                    <p class="card-description">
+                        Documento detallado en Markdown con toda la información del proyecto.
+                        520 líneas de documentación técnica.
+                    </p>
+                    <span class="card-status">✓ Disponible (Markdown)</span>
+                </div>
+            </a>
+
+            <!-- Sistema 1: Temperatura -->
+            <a href="01-temperatura-habitat.html" target="_blank">
+                <div class="presentation-card">
+                    <span class="card-icon">🌡️</span>
+                    <h2 class="card-title">Control de Temperatura</h2>
+                    <p class="card-description">
+                        Sistema de control térmico para hábitat y huerta. 
+                        Redundancia triple, control PID, protocolo de emergencia.
+                    </p>
+                    <span class="card-status">✓ Interactivo (HTML5)</span>
+                </div>
+            </a>
+
+            <!-- Sistema 2: Bit Flips -->
+            <a href="02-proteccion-bitflips.html" target="_blank">
+                <div class="presentation-card">
+                    <span class="card-icon">🛡️</span>
+                    <h2 class="card-title">Protección contra Bit Flips</h2>
+                    <p class="card-description">
+                        TMR + Hamming Code para protección contra radiación cósmica. 
+                        Detección y corrección automática de errores.
+                    </p>
+                    <span class="card-status">✓ Interactivo (HTML5)</span>
+                </div>
+            </a>
+
+            <!-- Sistema 3: Comunicaciones -->
+            <div class="presentation-card">
+                <span class="card-icon">📡</span>
+                <h2 class="card-title">Comunicaciones Seguras</h2>
+                <p class="card-description">
+                    Cifrado AES-256, DTN protocol, redundancia de canales.
+                    Latencia 4-24 minutos con Tierra.
+                </p>
+                <span class="card-status coming-soon">📋 Documentado en README</span>
+            </div>
+
+            <!-- Sistema 4: Telemetría -->
+            <div class="presentation-card">
+                <span class="card-icon">📊</span>
+                <h2 class="card-title">Sistema de Telemetría</h2>
+                <p class="card-description">
+                    Monitoreo en tiempo real de todos los sistemas.
+                    Compresión 10:1, almacenamiento redundante.
+                </p>
+                <span class="card-status coming-soon">📋 Documentado en README</span>
+            </div>
+
+            <!-- Sistema 5: Control O2 -->
+            <a href="05-control-o2.html" target="_blank">
+                <div class="presentation-card">
+                    <span class="card-icon">💨</span>
+                    <h2 class="card-title">Control de Oxígeno</h2>
+                    <p class="card-description">
+                        Gestión de atmósfera respirable. Rango 19.5-23.5% O2.
+                        Detección de fugas y sistema de emergencia.
+                    </p>
+                    <span class="card-status">✓ Interactivo (HTML5)</span>
+                </div>
+            </a>
+
+            <!-- Sistema 6: Conversión CO2 -->
+            <a href="06-conversion-co2-o2.html" target="_blank">
+                <div class="presentation-card">
+                    <span class="card-icon">🔄</span>
+                    <h2 class="card-title">Conversión CO2 → O2</h2>
+                    <p class="card-description">
+                        Tecnología MOXIE. Producción 10g O2/hora.
+                        Uso de recursos locales marcianos.
+                    </p>
+                    <span class="card-status">✓ Interactivo (HTML5)</span>
+                </div>
+            </a>
+
+            <!-- Sistema 7: Filtración Agua -->
+            <a href="07-filtracion-agua.html" target="_blank">
+                <div class="presentation-card">
+                    <span class="card-icon">💧</span>
+                    <h2 class="card-title">Filtración de Agua</h2>
+                    <p class="card-description">
+                        Reciclaje 98% del agua. Pureza 99.9%.
+                        Multi-etapa: filtración, ósmosis, UV.
+                    </p>
+                    <span class="card-status">✓ Interactivo (HTML5)</span>
+                </div>
+            </a>
+
+            <!-- Sistema 8: Energía y Recursos -->
+            <a href="08-sistema-energia-recursos.html" target="_blank">
+                <div class="presentation-card general-presentation">
+                    <span class="card-icon">🔋</span>
+                    <h2 class="card-title">Sistema de Energía y Recursos</h2>
+                    <p class="card-description">
+                        Ciclo completo: Solar/Nuclear → Electrólisis → Sabatier → Destilación.
+                        Producción de O2, CH4 y N2 desde recursos marcianos.
+                    </p>
+                    <span class="card-status">✓ Interactivo (HTML5)</span>
+                </div>
+            </a>
+        </div>
+
+        <!-- Estadísticas del Proyecto -->
+        <div class="stats-bar">
+            <div class="stat">
+                <div class="stat-value">8</div>
+                <div class="stat-label">Sistemas Críticos</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">3</div>
+                <div class="stat-label">Lenguajes</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">99.9%</div>
+                <div class="stat-label">Confiabilidad</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">6</div>
+                <div class="stat-label">Demos HTML5</div>
+            </div>
+        </div>
+
+        <footer>
+            <p>🚀 Proyecto: Sistemas Críticos para Hábitat Marciano</p>
+            <p>Implementado en Rust, C++ y Python | Versión 1.0.0</p>
+            <p style="margin-top: 10px; opacity: 0.7;">
+                "Per aspera ad astra" - A través de las dificultades, hacia las estrellas
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // Animación de estrellas en el fondo
+        function createStars() {
+            const body = document.body;
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.style.position = 'fixed';
+                star.style.width = Math.random() * 3 + 'px';
+                star.style.height = star.style.width;
+                star.style.background = 'white';
+                star.style.borderRadius = '50%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.opacity = Math.random() * 0.5 + 0.2;
+                star.style.animation = `twinkle ${Math.random() * 3 + 2}s infinite`;
+                star.style.zIndex = '-1';
+                body.appendChild(star);
+            }
+        }
+
+        // Agregar animación de parpadeo
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes twinkle {
+                0%, 100% { opacity: 0.2; }
+                50% { opacity: 0.8; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Crear estrellas al cargar
+        window.onload = createStars;
+    </script>
+</body>
+</html>

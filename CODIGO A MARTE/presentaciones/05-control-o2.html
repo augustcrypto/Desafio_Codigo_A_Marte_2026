@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Oxígeno - Hábitat Marciano</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0c4a6e 0%, #075985 50%, #0369a1 100%);
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(56, 189, 248, 0.3);
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(56, 189, 248, 0.8);
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { text-shadow: 0 0 20px rgba(56, 189, 248, 0.8); }
+            50% { text-shadow: 0 0 30px rgba(56, 189, 248, 1); }
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #38bdf8;
+        }
+
+        .o2-meter {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .o2-display {
+            font-size: 6em;
+            font-weight: bold;
+            color: #10b981;
+            margin: 20px 0;
+            text-shadow: 0 0 30px rgba(16, 185, 129, 0.8);
+        }
+
+        .o2-bar {
+            height: 60px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            overflow: hidden;
+            position: relative;
+            margin: 30px 0;
+        }
+
+        .o2-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ef4444, #f59e0b, #10b981);
+            transition: width 1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .sensors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .sensor-card {
+            background: rgba(16, 185, 129, 0.2);
+            border: 2px solid #10b981;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .sensor-card.active {
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.5);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .sensor-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #10b981;
+            margin: 10px 0;
+        }
+
+        .control-panel {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+        }
+
+        button {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px 5px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(59, 130, 246, 0.5);
+        }
+
+        button.danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+
+        .alert {
+            background: rgba(239, 68, 68, 0.2);
+            border: 2px solid #ef4444;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            display: none;
+            animation: shake 0.5s;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-box {
+            background: rgba(56, 189, 248, 0.2);
+            border: 2px solid #38bdf8;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #38bdf8;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            margin-top: 50px;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>💨 Sistema de Control de Oxígeno</h1>
+            <p style="font-size: 1.2em; opacity: 0.9;">Gestión de Atmósfera Respirable - Hábitat Marciano</p>
+        </header>
+
+        <!-- Medidor Principal de O2 -->
+        <div class="section">
+            <h2>📊 Nivel de Oxígeno Actual</h2>
+            <div class="o2-meter">
+                <div class="o2-display" id="o2Level">21.0%</div>
+                <p style="font-size: 1.2em; opacity: 0.8;">Rango Óptimo: 19.5% - 23.5%</p>
+                <div class="o2-bar">
+                    <div class="o2-fill" id="o2Bar" style="width: 70%;">NORMAL</div>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                    <span>🔴 18%</span>
+                    <span>🟡 19.5%</span>
+                    <span>🟢 21%</span>
+                    <span>🟡 23.5%</span>
+                    <span>🔴 25%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sensores -->
+        <div class="section">
+            <h2>📡 Red de Sensores de O2</h2>
+            <div class="sensors-grid">
+                <div class="sensor-card active">
+                    <h3>Sensor 1</h3>
+                    <div class="sensor-value" id="sensor1">21.2%</div>
+                    <p>✓ Operativo</p>
+                </div>
+                <div class="sensor-card active">
+                    <h3>Sensor 2</h3>
+                    <div class="sensor-value" id="sensor2">20.9%</div>
+                    <p>✓ Operativo</p>
+                </div>
+                <div class="sensor-card active">
+                    <h3>Sensor 3</h3>
+                    <div class="sensor-value" id="sensor3">21.0%</div>
+                    <p>✓ Operativo</p>
+                </div>
+                <div class="sensor-card active">
+                    <h3>Sensor 4</h3>
+                    <div class="sensor-value" id="sensor4">21.1%</div>
+                    <p>✓ Operativo</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estadísticas -->
+        <div class="section">
+            <h2>📈 Estadísticas del Sistema</h2>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-value">99.99%</div>
+                    <p>Confiabilidad</p>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value">4</div>
+                    <p>Sensores</p>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value"><200ms</div>
+                    <p>Respuesta</p>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="leakRate">0.0%</div>
+                    <p>Fugas/hora</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel de Control -->
+        <div class="section">
+            <h2>🎮 Panel de Control Interactivo</h2>
+            <div class="control-panel">
+                <h3 style="color: #38bdf8; margin-bottom: 20px;">Simulaciones</h3>
+                <button onclick="simulateNormal()">🟢 Condiciones Normales</button>
+                <button onclick="simulateLowO2()">🟡 Bajo Oxígeno</button>
+                <button onclick="simulateHighO2()">🟠 Alto Oxígeno</button>
+                <button onclick="simulateLeak()" class="danger">🚨 Fuga Detectada</button>
+                <button onclick="activateEmergency()" class="danger">⚠️ Emergencia</button>
+            </div>
+            <div id="alertBox" class="alert">
+                <h3>⚠️ ALERTA DEL SISTEMA</h3>
+                <p id="alertMessage"></p>
+            </div>
+        </div>
+
+        <footer>
+            <p>💨 Sistema de Control de Oxígeno - Hábitat Marciano</p>
+            <p>Rango: 19.5-23.5% | Respuesta: <200ms | Estado: Operacional</p>
+        </footer>
+    </div>
+
+    <script>
+        let currentO2 = 21.0;
+        let leakRate = 0.0;
+
+        function updateDisplay() {
+            document.getElementById('o2Level').textContent = currentO2.toFixed(1) + '%';
+            
+            // Calcular posición en la barra (18% = 0%, 25% = 100%)
+            const barWidth = ((currentO2 - 18) / 7) * 100;
+            const bar = document.getElementById('o2Bar');
+            bar.style.width = Math.max(0, Math.min(100, barWidth)) + '%';
+            
+            // Determinar estado
+            let status, color;
+            if (currentO2 < 18 || currentO2 > 25) {
+                status = 'CRÍTICO';
+                color = '#ef4444';
+            } else if (currentO2 < 19.5 || currentO2 > 23.5) {
+                status = 'ADVERTENCIA';
+                color = '#f59e0b';
+            } else {
+                status = 'NORMAL';
+                color = '#10b981';
+            }
+            
+            bar.textContent = status;
+            document.getElementById('o2Level').style.color = color;
+            
+            // Actualizar sensores con variación
+            for (let i = 1; i <= 4; i++) {
+                const variation = (Math.random() - 0.5) * 0.4;
+                const sensorValue = currentO2 + variation;
+                document.getElementById('sensor' + i).textContent = sensorValue.toFixed(1) + '%';
+            }
+            
+            // Actualizar tasa de fugas
+            document.getElementById('leakRate').textContent = leakRate.toFixed(2) + '%';
+        }
+
+        function showAlert(message) {
+            document.getElementById('alertMessage').textContent = message;
+            document.getElementById('alertBox').classList.add('show');
+        }
+
+        function hideAlert() {
+            document.getElementById('alertBox').classList.remove('show');
+        }
+
+        function simulateNormal() {
+            currentO2 = 21.0;
+            leakRate = 0.0;
+            hideAlert();
+            updateDisplay();
+        }
+
+        function simulateLowO2() {
+            currentO2 = 19.0;
+            leakRate = 0.05;
+            showAlert('⚠️ Nivel de oxígeno bajo. Activando generadores de O2.');
+            updateDisplay();
+        }
+
+        function simulateHighO2() {
+            currentO2 = 24.0;
+            leakRate = 0.0;
+            showAlert('⚠️ Nivel de oxígeno alto. Ajustando ventilación.');
+            updateDisplay();
+        }
+
+        function simulateLeak() {
+            currentO2 = 18.5;
+            leakRate = 0.15;
+            showAlert('🚨 FUGA DETECTADA: Tasa de pérdida 0.15%/hora. Sellando sección afectada.');
+            updateDisplay();
+        }
+
+        function activateEmergency() {
+            currentO2 = 17.0;
+            leakRate = 0.3;
+            showAlert('🚨 EMERGENCIA: Nivel crítico de O2. Protocolo de emergencia activado. Evacuando a zona segura.');
+            updateDisplay();
+        }
+
+        // Actualizar cada 2 segundos
+        setInterval(() => {
+            if (leakRate > 0) {
+                currentO2 = Math.max(15, currentO2 - (leakRate / 1800)); // Simular pérdida
+            }
+            updateDisplay();
+        }, 2000);
+
+        // Inicializar
+        updateDisplay();
+    </script>
+</body>
+</html>
